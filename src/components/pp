@@ -1,0 +1,112 @@
+ ----------------------------------------------------------------------
+<b-col cols="3">
+          <b-form-select v-model="searchmet" :options="searchOption"></b-form-select>
+        </b-col>
+----------------------------------------------------------
+
+<b-row align-h="center" v-if="searchmet==1">
+        <b-col cols="2">
+          <b-form-input v-model="keyword" placeholder="Enter Anime name"></b-form-input>
+        </b-col>
+        <b-col cols="4" md="auto">
+          <b-button @click="searchdata()">Search Anime</b-button>
+        </b-col>
+      </b-row>
+      <b-row align-h="center" v-if="searchmet==2">
+        <b-col cols="2">
+          <b-form-input v-model="year" placeholder="Enter year"></b-form-input>
+        </b-col>
+        <b-col cols="2">
+          <b-form-select v-model="selected" :options="options"></b-form-select>
+        </b-col>
+        <b-col cols="4" md="auto">
+          <b-button @click="searchSeason()">Search Anime</b-button>
+        </b-col>
+      </b-row>
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------
+ data: function () {
+    return {
+      resultData: null,
+      keyword: "",
+      year: "",
+      selected: null,
+      searchmet: null,
+      options: [
+        { value: null, text: "Please select season" },
+        { value: "spring", text: "Spring" },
+        { value: "summer", text: "Summer" },
+        { value: "fall", text: "Fall" },
+        { value: "winter", text: "Winter" },
+      ],
+      searchOption: [
+        { value: null, text: "Please select search method" },
+        { value: 1, text: "Search byx name" },
+        { value: 2, text: "Search by Year and Season" },
+        { value: 3, text: "Upcoming Anime" },
+      ],
+    };
+  },
+
+
+
+-----------------------------------------------------
+
+methods: {
+    searchdata() {
+      axios
+        .get("https://api.jikan.moe/v3/search/anime?q=" + this.keyword)
+        .then(
+          (response) => (
+            (this.resultData = response.data.results),
+            (this.load = true),
+            (this.currentPage = 1)
+          )
+        )
+        .catch((error) => console.log(error));
+    },
+    searchSeason() {
+      axios
+        .get(
+          "https://api.jikan.moe/v3/season/" + this.year + "/" + this.selected
+        )
+        .then(
+          (response) => (
+            (this.resultData = response.data.anime),
+            (this.load = true),
+            (this.currentPage = 1)
+          )
+        )
+        .catch((error) => console.log(error));
+    },
+    upcoming() {
+      axios
+        .get("https://api.jikan.moe/v3/season/later")
+        .then(
+          (response) => (
+            (this.resultData = response.data.anime),
+            (this.load = true),
+            (this.currentPage = 1)
+          )
+        )
+        .catch((error) => console.log(error));
+    },
+  },
+watch: {
+    searchmet: function (val) {
+      if (val == 3) {
+        this.upcoming();
+      }
+    },
+  },
+};
+</script>

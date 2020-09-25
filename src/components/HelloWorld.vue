@@ -1,58 +1,88 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="contsiner">
+    <b-button @click="searchData()">Search</b-button>
+
+    <!--<b-button pill variant="outline-secondary"> Search</b-button>-->
+    <!--<b-card-group columns>
+      <b-card
+        v-for="data in result"
+        :key="data.mal_id"
+        :title="data.title"
+        :img-src="data.image_url"
+        :img-alt="Image"
+        img-top
+        tag="article"
+        style="max-width: 20rem"
+        class="mb-2"
+      >
+        <b-card-text>{{ data.synopsis }}</b-card-text>
+        <b-button :href="data.url" variant="primary">Go somewhere</b-button>
+      </b-card>
+    </b-card-group>-->
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  data() {
+    return {
+      result: null,
+      keyword: "",
+      // selected: null,
+      // searchmet: null,
+      // options: [
+      //   { value: null, text: "Please select a house" },
+      //   { value: "gryffindor", text: "Gryffindor" },
+      //   { value: "hufflepuff", text: "Hufflepuff" },
+      //   { value: "ravenclaw", text: "Ravenclaw" },
+      //   { value: "slytherin", text: "Slytherin" },
+      // ],
+      // searchOption: [
+      //   { value: null, text: "Please select search method" },
+      //   { value: 1, text: "Search by name" },
+      //   { value: 2, text: "select the desired house." },
+      // ],
+    };
+  },
+  methods: {
+    searchData() {
+      axios
+        .get(
+          "https://www.potterapi.com/v1/characters?key=$2a$10$y2st9DZ203ErCMHLEu1oAO.h/2GetoanHRC8xAi2hGjF6D8Y07JFa"
+        )
+        .then((response) => {
+            this.result = response.data;
+            console.log(this.result)
+            })
+        .catch((err) => console.log(err));
+    },
+    // searchSeason() {
+    //   axios
+    //     .get(
+    //       "https://www.potterapi.com/v1/houses?key=$2a$10$y2st9DZ203ErCMHLEu1oAO.h/2GetoanHRC8xAi2hGjF6D8Y07JFa" +
+    //         this.selected
+    //     )
+    //     .then(
+    //       (response) => (
+    //         (this.result = response.data.results),
+    //         (this.load = true)
+           
+    //       )
+    //     )
+    //     .catch((err) => console.log(err));
+    // },
+  },
+// watch: {
+//     searchmet: function (val) {
+//       if (val == 3) {
+//         this.upcoming();
+//       }
+//     },
+//   },
+
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
 </style>
