@@ -110,5 +110,3 @@ watch: {
 };
 </script>
 
-<style>
-</style>
