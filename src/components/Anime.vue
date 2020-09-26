@@ -1,46 +1,27 @@
 <template>
   <div class="contsiner">
-    <b-row align-h="center" cols="4">
-      <b-form-select
-        v-model="searchmet"
-        :options="searchOption"
-      ></b-form-select>
-    </b-row>
-
-    <b-row align-h="center" v-if="searchmet == 1">
-      <b-col cols="2">
-        <b-form-input v-model="keyword" placeholder="Enter name"></b-form-input>
-      </b-col>
-      <b-col cols="4" md="auto">
-        <b-button @click="searchData()">Search</b-button>
-      </b-col>
-    </b-row>
-    <b-row align-h="center" v-if="searchmet == 2">
-      <b-col cols="2">
-        <b-form-select v-model="selected" :options="options"></b-form-select>
-      </b-col>
-      <b-col cols="4" md="auto">
-        <b-button @click="searchSeason()">Search</b-button>
-      </b-col>
-    </b-row>
-    {{ result }}
-    <!--<b-button pill variant="outline-secondary"> Search</b-button>-->
-    <!--<b-card-group columns>
+    <div align="center">
+      <b-form-input
+        v-model="keyword"
+        class="sea"
+        placeholder="Enter a movie title"
+      ></b-form-input>
+        <b-button pill variant="warning" @click="search()">Search</b-button>
+    </div>
+    <b-card-group class="mt-2" columns>
       <b-card
+        class="mb-2"
         v-for="data in result"
-        :key="data.mal_id"
-        :title="data.title"
-        :img-src="data.image_url"
+        :key="data.imdbID"
+        :title="data.Title"
+        :img-src="data.Poster"
         :img-alt="Image"
         img-top
         tag="article"
         style="max-width: 20rem"
-        class="mb-2"
       >
-        <b-card-text>{{ data.synopsis }}</b-card-text>
-        <b-button :href="data.url" variant="primary">Go somewhere</b-button>
       </b-card>
-    </b-card-group>-->
+    </b-card-group>
   </div>
 </template>
 
@@ -51,62 +32,31 @@ export default {
     return {
       result: null,
       keyword: "",
-      selected: null,
-      searchmet: null,
-      options: [
-        { value: null, text: "Please select a house" },
-        { value: "gryffindor", text: "Gryffindor" },
-        { value: "hufflepuff", text: "Hufflepuff" },
-        { value: "ravenclaw", text: "Ravenclaw" },
-        { value: "slytherin", text: "Slytherin" },
-      ],
-      searchOption: [
-        { value: null, text: "Please select search method" },
-        { value: 1, text: "Search by name" },
-        { value: 2, text: "select the desired house." },
-      ],
+      data: "",
     };
   },
   methods: {
-    searchData() {
+    search() {
       axios
-        .get(
-          "https://www.potterapi.com/v1/characters?key=$2a$10$y2st9DZ203ErCMHLEu1oAO.h/2GetoanHRC8xAi2hGjF6D8Y07JFa" +
-            this.keyword
-        )
-        .then(
-          (response) => (
-            (this.result = response.data.results),
-            (this.load = true),
-            (this.currentPage = 1)
-          )
-        )
-        .catch((err) => console.log(err));
-    },
-    searchSeason() {
-      axios
-        .get(
-          "https://www.potterapi.com/v1/houses?key=$2a$10$y2st9DZ203ErCMHLEu1oAO.h/2GetoanHRC8xAi2hGjF6D8Y07JFa" +
-            this.selected
-        )
-        .then(
-          (response) => (
-            (this.result = response.data.results),
-            (this.load = true)
-           
-          )
-        )
+        .get("http://www.omdbapi.com/?s=" + this.keyword + "&apikey=409a3997")
+        .then((response) => {
+          this.result = response.data.Search;
+          console.log(this.result);
+        })
         .catch((err) => console.log(err));
     },
   },
-watch: {
+  watch: {
     searchmet: function (val) {
       if (val == 3) {
         this.upcoming();
       }
     },
   },
-
 };
 </script>
-
+<style>
+.sea {
+  width: 30rem;
+}
+</style>
